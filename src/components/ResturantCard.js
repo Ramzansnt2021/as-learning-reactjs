@@ -1,30 +1,40 @@
-// Resturant Cards
+import { CDN_URL } from '../utils/constants'
+
 const ResturantCard = (props) => {
   const { resItems } = props
   const {
-    hero_listing_image,
+    cloudinaryImageId,
     name,
-    rating,
-    minimum_order_amount,
-    minimum_delivery_time,
-    minimum_delivery_fee,
-  } = resItems
+    avgRating,
+    cuisines,
+    costForTwo,
+    locality,
+    areaName,
+    sla,
+  } = resItems.info
+
   return (
     <div className='cards'>
       <div className='card-image'>
-        <img src={hero_listing_image} alt='res-image' />
+        <img
+          src={CDN_URL + cloudinaryImageId}
+          alt={name || 'Restaurant image'}
+        />
       </div>
       <div className='card-body'>
         <div className='card-info'>
           <div className='card-title'>{name}</div>
-          <div className='card-rating'>Rating: {rating}</div>
+          <div>{cuisines?.join(', ')}</div>
+          <div className='card-rating'>{avgRating} stars</div>
         </div>
 
-        <div className='card-price'>Price : {minimum_order_amount}</div>
+        <div className='card-price'>Price : {costForTwo}</div>
         <div className='delivery'>
           Time:
-          <span className='time'>{minimum_delivery_time} mins</span>
-          <span className='charges'>charges fee:{minimum_delivery_fee}</span>
+          <span className='time'>{sla?.deliveryTime} minutes</span>
+          <span className='charges'>
+            locality: {locality}, {areaName}
+          </span>
         </div>
       </div>
     </div>

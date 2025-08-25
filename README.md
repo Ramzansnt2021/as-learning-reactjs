@@ -2,8 +2,6 @@
 
 Akshay Saini React JS Learning Framework
 
-/\*
-
 - Header
 - - Logo
 - - Nav Items
@@ -24,4 +22,5 @@ Akshay Saini React JS Learning Framework
 - - Newsletter
 - - Social Links
 - - Copyright
-    \*/
+
+# Reconciliation React Algo

@@ -24,7 +24,10 @@ const ResturantCard = (props) => {
       <div className='card-body'>
         <div className='card-info'>
           <div className='card-title'>{name}</div>
-          <div>{cuisines?.join(', ')}</div>
+          <div>
+            <b>Cuisines:</b>
+            {cuisines?.join(', ')}
+          </div>
           <div className='card-rating'>{avgRating} stars</div>
         </div>
 

@@ -86,16 +86,16 @@ body {
 }
 
 .header .logo {
-  width: calc(33.33% - 15px);
+  width: calc(16% - 15px);
   flex: 0 0 auto; /* don't grow/shrink */
 }
 .header .navigations {
-  width: calc(66.66% - 15px);
+  width: calc(84% - 15px);
   display: flex;
   flex-direction: row;
   justify-content: end;
   align-items: center;
-  gap: 30px;
+  gap: 20px;
 }
 .header .logo span {
   font-size: 32px;
@@ -133,6 +133,7 @@ body {
   padding: 16px 32px;
   border-radius: 8px;
   text-decoration: none;
+  cursor: pointer;
 }
 /* hover */
 
@@ -156,15 +157,12 @@ body {
   background-color: #fff;
   border-radius: 8px;
   text-decoration: none;
+  cursor: pointer;
 }
 
 /* Body */
 .body {
   margin-top: 20px;
-}
-
-.body .search {
-  margin: 20px auto;
 }
 
 /* restautants  */
@@ -205,8 +203,115 @@ body {
   flex-wrap: wrap;
   justify-content: space-between;
 }
+.restaurants-container .cards .card-body .card-info .card-rating {
+  background-color: #ffff00;
+  color: #303030;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 0;
+}
 @media screen and (width<=80rem) {
   .body .restaurants-container .cards {
     width: calc(33.33% - 13.33px);
+  }
+}
+/* Button Filters */
+.filter-flex {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 20px;
+  align-items: flex-start;
+  margin: 20px 0;
+}
+.filter-flex button {
+  padding: 15px 30px;
+  font-size: 16px;
+  line-height: 1em;
+  font-weight: 400;
+  background-color: #dd3737;
+  color: #fff;
+  border: 1px solid #dd3737;
+  border-radius: 4px;
+  cursor: pointer;
+}
+/* Shimmer UI */
+/* Base shimmer animation */
+.shimmer-ui {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.shimmer-box {
+  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+  background-size: 1200px 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 8px;
+}
+
+/* Card container */
+.cards.shimmer-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 10px;
+  margin: 10px;
+}
+
+.shimmer-card div {
+}
+
+/* Image placeholder */
+.card-image.shimmer-box {
+  height: 150px;
+  width: 100%;
+  border-radius: 12px;
+}
+
+/* Text placeholders */
+.shimmer-box.title {
+  height: 20px;
+  width: 70%;
+  margin: 10px 0;
+}
+
+.shimmer-box.text {
+  height: 14px;
+  width: 90%;
+  margin: 5px 0;
+}
+
+.shimmer-box.rating {
+  height: 14px;
+  width: 40%;
+  margin: 5px 0;
+}
+
+.shimmer-box.price {
+  height: 16px;
+  width: 60%;
+  margin: 10px 0;
+}
+
+.shimmer-box.time,
+.shimmer-box.charges {
+  height: 14px;
+  width: 45%;
+  display: inline-block;
+  margin: 5px 5px 0 0;
+}
+#search {
+  padding: 15px;
+  border-radius: 0;
+}
+@keyframes shimmer {
+  0% {
+    background-position: -1200px 0;
+  }
+  100% {
+    background-position: 1200px 0;
   }
 }

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import ResturantCard from './ResturantCard'
 import Shimmer from './Shimmer'
 
-const Body = () => {
+const Home = () => {
   const [allRestaurants, setAllRestaurants] = useState([])
   const [visibleRestaurants, setVisibleRestaurants] = useState([])
   const [searchText, setSearchText] = useState('')
@@ -120,4 +120,4 @@ const Body = () => {
   )
 }
 
-export default Body
+export default Home

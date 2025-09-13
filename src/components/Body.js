@@ -1,11 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import ResturantCard from './ResturantCard'
 import Shimmer from './Shimmer'
 
 const Body = () => {
   const [allRestaurants, setAllRestaurants] = useState([])
-  const [resturantLists, setResturantLists] = useState([])
+  const [visibleRestaurants, setVisibleRestaurants] = useState([])
   const [searchText, setSearchText] = useState('')
+  const [page, setPage] = useState(1)
+
+  const pageSize = 8 // number of restaurants per "page"
+  const loaderRef = useRef(null)
 
   // Fetch data on mount
   useEffect(() => {
@@ -15,7 +19,7 @@ const Body = () => {
   const fetchData = async () => {
     try {
       const responses = await fetch(
-        'https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9254533&lng=77.546757'
+        'https://www.swiggy.com/dapi/restaurants/list/v5?lat=23.0381364&lng=72.5543807&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING'
       )
       const data = await responses.json()
 
@@ -24,35 +28,57 @@ const Body = () => {
           ?.restaurants || []
 
       setAllRestaurants(restaurants)
-      setResturantLists(restaurants)
+      setVisibleRestaurants(restaurants.slice(0, pageSize)) // initial page
     } catch (error) {
       console.error('Error fetching data:', error)
     }
   }
 
-  const handleSearch = () => {
+  // IntersectionObserver for infinite scroll
+  useEffect(() => {
+    if (!loaderRef.current) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setPage((prev) => prev + 1)
+        }
+      },
+      { threshold: 1.0 }
+    )
+
+    observer.observe(loaderRef.current)
+
+    return () => {
+      if (loaderRef.current) observer.unobserve(loaderRef.current)
+    }
+  }, [])
+
+  // Update visibleRestaurants when page or search changes
+  useEffect(() => {
     const query = searchText.trim().toLowerCase()
-    if (query === '') {
-      setResturantLists(allRestaurants)
-      return
+
+    let filtered = allRestaurants
+    if (query !== '') {
+      filtered = allRestaurants.filter((resturant) =>
+        resturant.info.name.toLowerCase().includes(query)
+      )
     }
 
-    const filteredRestaurants = allRestaurants.filter((resturant) =>
-      resturant.info.name.toLowerCase().includes(query)
-    )
-    setResturantLists(filteredRestaurants)
-  }
+    setVisibleRestaurants(filtered.slice(0, page * pageSize))
+  }, [page, searchText, allRestaurants])
 
   const handleTopRated = () => {
     const filteredLists = allRestaurants.filter(
       (resturant) => resturant.info.avgRating >= 4.5
     )
-    setResturantLists(filteredLists)
+    setVisibleRestaurants(filteredLists.slice(0, page * pageSize))
   }
 
   const handleReset = () => {
     setSearchText('')
-    setResturantLists(allRestaurants)
+    setPage(1)
+    setVisibleRestaurants(allRestaurants.slice(0, pageSize))
   }
 
   return (
@@ -68,7 +94,6 @@ const Body = () => {
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
-            <button onClick={handleSearch}>Search</button>
           </div>
 
           <button className='search' onClick={handleTopRated}>
@@ -79,14 +104,17 @@ const Body = () => {
         </div>
 
         <div className='restaurants-container'>
-          {resturantLists.length === 0 ? (
+          {visibleRestaurants.length === 0 ? (
             <Shimmer />
           ) : (
-            resturantLists.map((resturant) => (
+            visibleRestaurants.map((resturant) => (
               <ResturantCard key={resturant.info.id} resItems={resturant} />
             ))
           )}
         </div>
+
+        {/* Observer target (loader) */}
+        <div ref={loaderRef} style={{ height: '40px' }}></div>
       </div>
     </main>
   )

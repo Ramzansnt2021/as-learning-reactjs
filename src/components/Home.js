@@ -41,10 +41,20 @@ const Home = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          setPage((prev) => prev + 1)
+          setPage((prev) => {
+            const maxPage = Math.ceil(allRestaurants.length / pageSize)
+            if (prev < maxPage) {
+              return prev + 1
+            }
+            return prev
+          })
         }
       },
-      { threshold: 1.0 }
+      {
+        root: null,
+        rootMargin: '200px', // trigger earlier before full visibility
+        threshold: 0.1, // fire when 10% visible
+      }
     )
 
     observer.observe(loaderRef.current)
@@ -52,7 +62,7 @@ const Home = () => {
     return () => {
       if (loaderRef.current) observer.unobserve(loaderRef.current)
     }
-  }, [])
+  }, [allRestaurants])
 
   // Update visibleRestaurants when page or search changes
   useEffect(() => {
@@ -65,7 +75,8 @@ const Home = () => {
       )
     }
 
-    setVisibleRestaurants(filtered.slice(0, page * pageSize))
+    const maxItems = page * pageSize
+    setVisibleRestaurants(filtered.slice(0, maxItems))
   }, [page, searchText, allRestaurants])
 
   const handleTopRated = () => {
@@ -114,7 +125,7 @@ const Home = () => {
         </div>
 
         {/* Observer target (loader) */}
-        <div ref={loaderRef} style={{ height: '40px' }}></div>
+        <div ref={loaderRef} style={{ height: '100px' }}></div>
       </div>
     </main>
   )
